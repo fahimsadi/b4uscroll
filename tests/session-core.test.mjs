@@ -1,0 +1,24 @@
+import assert from "node:assert/strict";
+import { accrueActiveTime, allowedMs, createSession, remainingMs, sessionsToCsv, siteForUrl, siteFromUrl } from "../shared/session-core.js";
+
+const session = createSession({ site: "instagram", reason: "Reply, urgently", plannedMinutes: 5, now: 1000 });
+session.isTracking = true;
+accrueActiveTime(session, 61000);
+assert.equal(session.activeMs, 60000, "only intervals flagged as active are counted");
+session.isTracking = false;
+accrueActiveTime(session, 121000);
+assert.equal(session.activeMs, 60000, "inactive intervals do not count");
+session.isTracking = true;
+accrueActiveTime(session, 301000);
+assert.equal(session.activeMs, 240000, "a resumed active interval is added exactly once");
+session.extensions.push({ minutes: 5 });
+assert.equal(allowedMs(session), 600000, "extensions increase the allowed budget");
+assert.equal(remainingMs(session), 360000);
+assert.equal(siteFromUrl("https://www.instagram.com/reel/abc"), "instagram");
+assert.equal(siteFromUrl("https://m.facebook.com/messages"), "facebook");
+assert.equal(siteFromUrl("https://www.linkedin.com/feed/"), "linkedin");
+assert.equal(siteFromUrl("https://example.com"), null);
+assert.equal(siteForUrl("https://news.example.com/feed", [{ domain: "example.com", enabled: true }]), "custom:example.com");
+const csv = sessionsToCsv([session]);
+assert.match(csv, /"Reply, urgently"/, "CSV quotes fields containing commas");
+console.log("session-core tests passed");

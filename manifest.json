@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Before You Scroll",
+  "version": "1.0.0",
+  "description": "A mindful pause before social media, with local active-time tracking.",
+  "permissions": ["storage", "tabs", "alarms", "idle", "windows", "scripting"],
+  "optional_host_permissions": ["*://*/*"],
+  "host_permissions": ["*://facebook.com/*", "*://*.facebook.com/*", "*://instagram.com/*", "*://*.instagram.com/*", "*://linkedin.com/*", "*://*.linkedin.com/*"],
+  "background": { "service_worker": "background.js", "type": "module" },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_title": "Before You Scroll",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "options_page": "dashboard.html",
+  "content_scripts": [
+    {
+      "matches": ["*://facebook.com/*", "*://*.facebook.com/*", "*://instagram.com/*", "*://*.instagram.com/*", "*://linkedin.com/*", "*://*.linkedin.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+# Packaged Chrome-extension artifacts and the private signing key
+*.crx
+*.pem
+
+# Local tooling and OS files
+node_modules/
+coverage/
+.DS_Store
+Thumbs.db
